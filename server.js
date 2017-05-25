@@ -1,11 +1,12 @@
 'use strict';
 
-const express     = require('express');
-const bodyParser  = require('body-parser');
-const fccTesting  = require('./freeCodeCamp/fcctesting.js');
-const session     = require('express-session');
-const mongo       = require('mongodb').MongoClient;
-const passport    = require('passport');
+const express           = require('express');
+const bodyParser        = require('body-parser');
+const fccTesting        = require('./freeCodeCamp/fcctesting.js');
+const session           = require('express-session');
+const mongo             = require('mongodb').MongoClient;
+const passport          = require('passport');
+const GitHubStrategy    = require('passport-github').Strategy();
 
 const app = express();
 
@@ -15,7 +16,7 @@ app.use('/public', express.static(process.cwd() + '/public'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.set('view engine', 'pug')
+app.set('view engine', 'pug');
 
 mongo.connect(process.env.DATABASE, (err, db) => {
     if(err) {
@@ -55,6 +56,17 @@ mongo.connect(process.env.DATABASE, (err, db) => {
         /*
         *  ADD YOUR CODE BELOW
         */
+        passport.use(new GitHubStrategy({
+            clientID: process.env.GITHUB_CLIENT_ID,
+            clientSecret: process.env.GITHUB_CLIENT_SECRET,
+            callbackURL: 'https://crh-socialauth.herokuapp.com/auth/github/callback'
+          },
+          function(accessToken, refreshToken, profile, cb) {
+              console.log(profile);
+              //Database logic here with callback containing our user object
+          }
+        ));
+
         app.get('/auth/github', 
                 passport.authenticate('github'), 
                 (req, res) => {
