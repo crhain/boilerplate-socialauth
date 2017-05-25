@@ -55,9 +55,17 @@ mongo.connect(process.env.DATABASE, (err, db) => {
         /*
         *  ADD YOUR CODE BELOW
         */
+        app.get('/auth/github', 
+                passport.authenticate('github'), 
+                (req, res) => {
+
+        });
       
-      
-      
+        app.get('/auth/github/callback', 
+                passport.authenticate('github', { failureRedirect: '/', successRedirect: '/profile' }), 
+                (req, res) => {
+          
+        });
       
       
       
