@@ -6,7 +6,7 @@ const fccTesting        = require('./freeCodeCamp/fcctesting.js');
 const session           = require('express-session');
 const mongo             = require('mongodb').MongoClient;
 const passport          = require('passport');
-const GitHubStrategy    = require('passport-github').Strategy();
+const GitHubStrategy    = require('passport-github').Strategy;
 
 const app = express();
 
@@ -76,7 +76,7 @@ mongo.connect(process.env.DATABASE, (err, db) => {
         app.get('/auth/github/callback', 
                 passport.authenticate('github', { failureRedirect: '/', successRedirect: '/profile' }), 
                 (req, res) => {
-          
+          res.end('App is working!');          
         });
       
       
