@@ -64,14 +64,14 @@ mongo.connect(process.env.DATABASE, (err, db) => {
           function(accessToken, refreshToken, profile, cb) {
               console.log(profile);
               //Database logic here with callback containing our user object
-              db.collection('socialusers').findAndModify(
+              db.collection('socialusers').findAndModify( 
                 {id: profile.id},
                 {},
                 {$setOnInsert:{
                     id: profile.id,
                     name: profile.displayName || 'John Doe',
                     photo: profile.photos[0].value || '',
-                    email: profile.emails[0].value || 'No public email',
+                    email: profile.emails ? profile.emails[0].value : 'No public email',
                     created_on: new Date(),
                     provider: profile.provider || ''
                 },$set:{
